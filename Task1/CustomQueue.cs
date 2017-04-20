@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Task1
 {
-    public class CustomQueue<T> : IEnumerable<T>, IEnumerable//, ICollection, IReadOnlyCollection<T> 
+    public class CustomQueue<T> : IEnumerable<T>, IEnumerable
     {
         private T[] array;
         private int first;
@@ -128,10 +128,26 @@ namespace Task1
                 SetCapacity(size);
         }
 
+        public T[] ToArray()
+        {
+            T[] newArray = new T[size];
+            if (size != 0)
+            {
+                if (first < last)
+                {
+                    Array.Copy(array, first, newArray, 0, size);
+                    return newArray;
+                }
+                Array.Copy(array, first, newArray, 0, array.Length - first);
+                Array.Copy(array, 0, newArray, array.Length - first, last);
+            }
+            return newArray;
+        }
+
         #endregion
 
         #region Interfaces implementations
-        
+
         public IEnumerator<T> GetEnumerator()
         {
             return new CustomEnumerator();
@@ -175,7 +191,7 @@ namespace Task1
 
         #region Enumerator
 
-        private struct CustomEnumerator : IEnumerator<T>
+        private struct CustomEnumerator : IEnumerator<T>, IDisposable
         {
             private readonly CustomQueue<T> queue;
             private int index;
@@ -238,7 +254,11 @@ namespace Task1
                 currentElement = default(T);
             }            
 
-            public void Dispose() { }
+            public void Dispose()
+            {
+                index = -2;
+                currentElement = default(T);
+            }
         }
 
         #endregion
