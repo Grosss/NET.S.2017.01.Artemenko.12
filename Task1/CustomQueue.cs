@@ -42,8 +42,8 @@ namespace Task1
             array = new T[defaultCapacity];
             size = 0;
 
-            foreach (var element in collection)
-                Enqueue(element);
+            foreach(var element in collection)                
+                Enqueue(element);            
         }
 
         #endregion
@@ -150,12 +150,12 @@ namespace Task1
 
         public IEnumerator<T> GetEnumerator()
         {
-            return new CustomEnumerator();
+            return new CustomEnumerator(this);
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return new CustomEnumerator();
+            return new CustomEnumerator(this);
         }
 
         #endregion
@@ -228,7 +228,7 @@ namespace Task1
             {
                 get
                 {
-                    if (index == -1)
+                    if (index < 0)
                     {
                         throw new InvalidOperationException();
                     }
@@ -240,7 +240,7 @@ namespace Task1
             {
                 get
                 {
-                    if (index == -1)
+                    if (index < 0)
                     {
                         throw new InvalidOperationException();
                     }
